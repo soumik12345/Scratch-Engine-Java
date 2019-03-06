@@ -39,4 +39,8 @@ public class DisplayManager {
 	public static void closeDisplay() {
 		Display.destroy();
 	}
+	
+	public static boolean isCloseRequested() {
+		return Display.isCloseRequested();
+	}
 }

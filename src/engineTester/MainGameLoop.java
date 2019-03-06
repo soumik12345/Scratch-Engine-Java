@@ -2,8 +2,6 @@ package engineTester;
 
 import javax.management.modelmbean.ModelMBeanAttributeInfo;
 
-import org.lwjgl.opengl.Display;
-
 import renderEngine.DisplayManager;
 import renderEngine.RawModel;
 import renderEngine.Renderer;
@@ -28,7 +26,7 @@ public class MainGameLoop {
 		RawModel model = new RawModel(vertices);
 		
 		// Game Loop
-		while(!Display.isCloseRequested()) {
+		while(!DisplayManager.isCloseRequested()) {
 			
 			renderer.prepare();
 			renderer.render(model);
