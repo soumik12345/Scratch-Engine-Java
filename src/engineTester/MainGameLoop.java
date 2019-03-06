@@ -1,9 +1,10 @@
 package engineTester;
 
+import javax.management.modelmbean.ModelMBeanAttributeInfo;
+
 import org.lwjgl.opengl.Display;
 
 import renderEngine.DisplayManager;
-import renderEngine.Loader;
 import renderEngine.RawModel;
 import renderEngine.Renderer;
 
@@ -13,7 +14,6 @@ public class MainGameLoop {
 		
 		DisplayManager.createDisplay();
 		
-		Loader loader = new Loader();
 		Renderer renderer = new Renderer();
 		
 		float[] vertices = {
@@ -25,7 +25,7 @@ public class MainGameLoop {
 				-0.5f, 0.5f, 0f,
 		};
 		
-		RawModel model = loader.loadToVAO(vertices);
+		RawModel model = new RawModel(vertices);
 		
 		// Game Loop
 		while(!Display.isCloseRequested()) {
@@ -35,7 +35,7 @@ public class MainGameLoop {
 			DisplayManager.updateDisplay();
 		}
 		
-		loader.cleanUp();
+		model.cleanUp();
 		DisplayManager.closeDisplay();
 		
 	}
