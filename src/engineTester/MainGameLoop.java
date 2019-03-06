@@ -18,14 +18,14 @@ public class MainGameLoop {
 				-0.5f, 0.5f, 0f,
 				-0.5f, -0.5f, 0f,
 				0.5f, -0.5f, 0f,
-				0.5f, -0.5f, 0f,
 				0.5f, 0.5f, 0f,
-				-0.5f, 0.5f, 0f,
 		};
+		
+		int[] indices = {0, 1, 3, 3, 1, 2};
 		
 		ArrayList<RawModel> modelList = new ArrayList<RawModel>();
 		
-		modelList.add(new RawModel(vertices));
+		modelList.add(new RawModel(vertices, indices));
 		
 		for(RawModel model : modelList)
 			model.loadModel();
