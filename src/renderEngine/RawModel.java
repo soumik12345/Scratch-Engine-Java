@@ -19,7 +19,6 @@ public class RawModel {
 	public RawModel(float[] vertices) {
 		this.vertices = vertices;
 		this.vertexCount = vertices.length / 3;
-		loadModel();
 	}
 
 	public int getVaoID() {

@@ -1,6 +1,6 @@
 package engineTester;
 
-import javax.management.modelmbean.ModelMBeanAttributeInfo;
+import java.util.ArrayList;
 
 import renderEngine.DisplayManager;
 import renderEngine.RawModel;
@@ -23,17 +23,24 @@ public class MainGameLoop {
 				-0.5f, 0.5f, 0f,
 		};
 		
-		RawModel model = new RawModel(vertices);
+		ArrayList<RawModel> modelList = new ArrayList<RawModel>();
+		
+		modelList.add(new RawModel(vertices));
+		
+		for(RawModel model : modelList)
+			model.loadModel();
 		
 		// Game Loop
 		while(!DisplayManager.isCloseRequested()) {
 			
 			renderer.prepare();
-			renderer.render(model);
+			renderer.render(modelList);
 			DisplayManager.updateDisplay();
 		}
 		
-		model.cleanUp();
+		for(RawModel model : modelList)
+			model.cleanUp();
+		
 		DisplayManager.closeDisplay();
 		
 	}
