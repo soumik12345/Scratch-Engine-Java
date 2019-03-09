@@ -12,6 +12,7 @@ public class StaticShader extends ShaderProgram {
 	@Override
 	protected void bindAttributes() {
 		super.BindAttribute(0, "position");
+		super.BindAttribute(1, "textureCoords");
 	}
 
 }

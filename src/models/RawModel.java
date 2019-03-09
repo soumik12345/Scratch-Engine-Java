@@ -1,5 +1,8 @@
-package renderEngine;
+package models;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -9,17 +12,22 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 public class RawModel {
 	
 	private int vaoID, vertexCount;
 	private float[] vertices;
+	private float[] textureCoordinates;
 	private int[] indices;
 	private ArrayList<Integer> vaos = new ArrayList<Integer>();
 	private ArrayList<Integer> vbos = new ArrayList<Integer>();
+	private ArrayList<Integer> textures = new ArrayList<Integer>();
 	
-	public RawModel(float[] vertices, int[] indices) {
+	public RawModel(float[] vertices, float[] textureCoordinates, int[] indices) {
 		this.vertices = vertices;
+		this.textureCoordinates = textureCoordinates;
 		this.vertexCount = indices.length;
 		this.indices = indices;
 	}
@@ -36,8 +44,25 @@ public class RawModel {
 	public void loadModel() {
 		this.vaoID = createVAO();
 		bindIndicesBuffer(this.indices);
-		storeDataInAttributes(0, this.vertices);
+		storeDataInAttributeList(0, 3, this.vertices);
+		storeDataInAttributeList(1, 2, this.textureCoordinates);
 		unbindVAO();
+	}
+	
+	// Load a Texture
+	public int loadTexture(String fileName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		int textureID = texture.getTextureID();
+		textures.add(textureID);
+		return textureID;
 	}
 	
 	// Create a Vertex Array Object
@@ -49,13 +74,13 @@ public class RawModel {
 	}
 	
 	// Store Vertex data in Attribute List
-	private void storeDataInAttributes(int attributeNumber, float[] data) {
+	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(attributeNumber, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
@@ -96,7 +121,9 @@ public class RawModel {
 		}
 		for(int vbo : vbos) {
 			GL15.glDeleteBuffers(vbo);
-			
+		}
+		for(int texture : textures) {
+			GL11.glDeleteTextures(texture);
 		}
 	}
 
