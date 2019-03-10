@@ -18,9 +18,9 @@ public class MainGameLoop {
 		
 		DisplayManager.createDisplay();
 		
-		Renderer renderer = new Renderer();
-		
 		StaticShader shader = new StaticShader();
+		
+		Renderer renderer = new Renderer(shader);
 		
 		float[] vertices = {
 				-0.5f, 0.5f, 0f,
@@ -47,7 +47,7 @@ public class MainGameLoop {
 		modelList.add(new RawModel(vertices, textureCoordinates, indices));
 		textureList.add( new ModelTexture(modelList.get(0).loadTexture("marble_texture")));
 		texturedModelList.add(new TexturedModel(modelList.get(0), textureList.get(0)));
-		entityList.add(new Entity(texturedModelList.get(0), new Vector3f(-1, 0, 0), 0, 0, 0, 1));
+		entityList.add(new Entity(texturedModelList.get(0), new Vector3f(0, 0, -1), 0, 0, 0, 1));
 		
 		
 		for(RawModel model : modelList)
@@ -56,7 +56,7 @@ public class MainGameLoop {
 		// Game Loop
 		while(!DisplayManager.isCloseRequested()) {
 			
-			entityList.get(0).increasePosition(0.002f, 0, 0);
+			entityList.get(0).increasePosition(0, 0, -0.1f);
 			entityList.get(0).increaseRotation(0, 1, 0);
 			
 			renderer.prepare();
