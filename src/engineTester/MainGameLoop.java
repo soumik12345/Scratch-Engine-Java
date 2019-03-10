@@ -2,6 +2,9 @@ package engineTester;
 
 import java.util.ArrayList;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
 import renderEngine.DisplayManager;
@@ -36,13 +39,15 @@ public class MainGameLoop {
 		int[] indices = {0, 1, 3, 3, 1, 2};
 		
 		
-		ArrayList<RawModel> modelList = new ArrayList<RawModel>();
-		ArrayList<ModelTexture> textureList = new ArrayList<ModelTexture>();
-		ArrayList<TexturedModel> texturedModelList = new ArrayList<TexturedModel>();
+		ArrayList<RawModel> modelList = new ArrayList<>();
+		ArrayList<ModelTexture> textureList = new ArrayList<>();
+		ArrayList<TexturedModel> texturedModelList = new ArrayList<>();
+		ArrayList<Entity> entityList = new ArrayList<>();
 		
 		modelList.add(new RawModel(vertices, textureCoordinates, indices));
 		textureList.add( new ModelTexture(modelList.get(0).loadTexture("marble_texture")));
 		texturedModelList.add(new TexturedModel(modelList.get(0), textureList.get(0)));
+		entityList.add(new Entity(texturedModelList.get(0), new Vector3f(-1, 0, 0), 0, 0, 0, 1));
 		
 		
 		for(RawModel model : modelList)
@@ -51,9 +56,12 @@ public class MainGameLoop {
 		// Game Loop
 		while(!DisplayManager.isCloseRequested()) {
 			
+			entityList.get(0).increasePosition(0.002f, 0, 0);
+			entityList.get(0).increaseRotation(0, 1, 0);
+			
 			renderer.prepare();
 			shader.start();
-			renderer.render(texturedModelList);
+			renderer.render(entityList, shader);
 			shader.stop();
 			DisplayManager.updateDisplay();
 		}

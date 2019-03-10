@@ -6,9 +6,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Matrix4f;
 
+import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
+import shaders.StaticShader;
+import toolBox.Maths;
 
 public class Renderer {
 	
@@ -17,12 +21,16 @@ public class Renderer {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 	}
 	
-	public void render(ArrayList<TexturedModel> texturedModelList) {
-		for(TexturedModel texturedModel : texturedModelList) {
+	public void render(ArrayList<Entity> entities, StaticShader shader) {
+		for(Entity entity : entities) {
+			TexturedModel texturedModel = entity.getModel();
 			RawModel model = texturedModel.getRawModel();
 			GL30.glBindVertexArray(model.getVaoID());
 			GL20.glEnableVertexAttribArray(0);
 			GL20.glEnableVertexAttribArray(1);
+			Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
+					entity.getRotationX(), entity.getRotationY(), entity.getRotationZ(), entity.getScale());
+			shader.loadTransformationMatrix(transformationMatrix);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getID());
 			GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
