@@ -13,7 +13,7 @@ import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
 import shaders.StaticShader;
-import toolBox.Maths;
+import toolBox.Maths; 
 
 public class Renderer {
 	

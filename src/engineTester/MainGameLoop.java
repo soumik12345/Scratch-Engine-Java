@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
 import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
@@ -49,6 +50,7 @@ public class MainGameLoop {
 		texturedModelList.add(new TexturedModel(modelList.get(0), textureList.get(0)));
 		entityList.add(new Entity(texturedModelList.get(0), new Vector3f(0, 0, -1), 0, 0, 0, 1));
 		
+		Camera camera = new Camera();
 		
 		for(RawModel model : modelList)
 			model.loadModel();
@@ -56,13 +58,19 @@ public class MainGameLoop {
 		// Game Loop
 		while(!DisplayManager.isCloseRequested()) {
 			
-			entityList.get(0).increasePosition(0, 0, -0.1f);
+			// Game Logic
+			entityList.get(0).increasePosition(0, 0, -0.01f);
 			entityList.get(0).increaseRotation(0, 1, 0);
+			camera.move();
 			
+			// Render Frame
 			renderer.prepare();
 			shader.start();
+			shader.loadViewMatrix(camera);
 			renderer.render(entityList, shader);
 			shader.stop();
+			
+			// Update Frame
 			DisplayManager.updateDisplay();
 		}
 		
